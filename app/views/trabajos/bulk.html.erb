@@ -1,0 +1,27 @@
+<h3>Dias que debe el Remisse: <%= @auto.nombre_completo %></h3>
+
+<%= form_for(@trabajos.first) do |f| %>
+  <%= hidden_field_tag :auto_id, @auto.id %>
+  <table border="1" width="60%">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Pago?</th>
+      </tr>
+    </thead>
+    <tbody>
+    <p>Seleccione los dias que fueron pagados</p>
+    <% @trabajos.each do |trabajo| %>
+      <tr>
+      <td><%= trabajo.fecha_formateada %></td>
+      <td><%= check_box_tag 'pagos[]', trabajo.id %></td>
+      </tr>
+    <% end %>
+
+    </tbody>
+  </table>
+  <br>
+  <br>
+  <%= submit_tag 'Cargar' %>
+  <%= link_to 'Cancelar', :controller => 'autos' %>
+<% end %>

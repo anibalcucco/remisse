@@ -1,0 +1,11 @@
+<% form_for(@trabajo, :url => trabajo_path(@trabajo)) do |f| %>
+  <p>Fecha: <%= @trabajo.fecha_formateada %></p>
+
+  <p>Remisse: <%= @trabajo.auto.nombre_completo %></p>
+  <p>Pagado: <%= f.check_box :pagado %></p>
+
+  <br>
+  <%= f.submit 'Actualizar' %>
+  <%= link_to 'Cancelar', :controller => 'autos' %>
+  
+<% end %>

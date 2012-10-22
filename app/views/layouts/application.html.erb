@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Remisse</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <% if user_signed_in? %>
+    <div id="topnav">
+      <div class="chromestyle" id="chromemenu">
+        <ul>
+          <li>
+              <%= link_to 'Remisses', :controller => autos_path %>
+              <%= link_to 'Cargar Planilla', new_trabajo_path %>
+              <%= link_to "Datos de la cuenta", edit_user_registration_path(current_user) %>
+              <%= link_to "Salir", destroy_user_session_path, :method => :delete %>
+          </li>
+        </ul>
+      </div>
+
+      <script type="text/javascript">
+          cssdropdown.startchrome("chromemenu")
+      </script>
+    </div>
+  <% end %>
+
+  <div class="container">
+    <% flash.each do |name, msg| %>
+      <div class="alert alert-<%= name == :notice ? "success" : "error" %>">
+        <%= msg %>
+      </div>
+    <% end %>
+    <div id="content">
+      <%= yield %>
+    </div>
+  </div>
+
+</body>
+</html>

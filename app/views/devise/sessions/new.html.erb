@@ -1,0 +1,13 @@
+<center>
+  <h1>Login</h1>
+
+  <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+    <div><%= f.label "Usuario" %><br />
+    <%= f.text_field :login, :autofocus => true %></div>
+
+    <div><%= f.label "Contraseña" %><br />
+    <%= f.password_field :password %></div>
+
+    <div><%= f.submit "Entrar" %></div>
+  <% end %>
+</center>

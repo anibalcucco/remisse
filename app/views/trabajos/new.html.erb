@@ -1,0 +1,32 @@
+<%= form_tag(trabajos_path) do |f| %>
+  <p>Elija la fecha de carga:</p>
+  <%= text_field_tag :fecha, nil, :class => "datepicker" %>
+
+  <table border="1" width="60%">
+    <thead>
+      <tr>
+        <th>Remisse</th>
+        <th>Oblea</th>
+        <th>Trabajo?</th>
+        <th>Pago?</th>
+      </tr>
+    </thead>
+    <tbody>
+    <br>
+    <p>Seleccione los remisses que trabajaron y los que pagaron</p>
+    <% @autos.each do |auto| %>
+      <tr>
+      <td><%= auto.nombre %></td>
+      <td><%= auto.oblea %></td>
+      <td><%= check_box_tag 'trabajos[]', auto.id %></td>
+      <td><%= check_box_tag 'pagos[]', auto.id %></td>
+      </tr>
+    <% end %>
+
+    </tbody>
+  </table>
+  <br>
+  <br>
+  <%= submit_tag 'Cargar' %>
+  <%= link_to 'Cancelar', :controller => 'autos' %>
+<% end %>
