@@ -12,4 +12,5 @@ end
 
 gem 'jquery-rails'
 gem 'active_scaffold'
-gem "devise"
+gem 'devise'
+gem 'pg'
