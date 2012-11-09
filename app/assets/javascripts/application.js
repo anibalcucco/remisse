@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.ui.all
 //= require active_scaffold
 //= require chrome/chromejs/chrome
 //= require_tree .
