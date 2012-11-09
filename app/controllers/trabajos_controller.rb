@@ -21,8 +21,8 @@ class TrabajosController < ApplicationController
         trabajo = Trabajo.find(:first, :conditions => ['fecha = ? AND auto_id = ?', params[:fecha].to_date, auto_id])
         if trabajo
           trabajo.update_attribute(:pagado, pagado?(auto_id))
-        else  
-          Trabajo.create(:fecha => params[:fecha], :auto_id => auto_id, :pagado => pagado?(auto_id) )
+        elsif !pagado?(auto_id)
+          Trabajo.create(:fecha => params[:fecha], :auto_id => auto_id, :pagado => false)
         end  
       end if params[:trabajos]  
       flash[:notice] = 'La carga fue exitosa'
