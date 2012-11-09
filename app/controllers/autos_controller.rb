@@ -1,5 +1,7 @@
 class AutosController < ApplicationController
 
+  before_filter :authenticate_user!
+
   active_scaffold :auto do |config|
     config.actions = [:create, :update, :list, :delete, :show, :search]
     config.label = "Remisses YA!"
