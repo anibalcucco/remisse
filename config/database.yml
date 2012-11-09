@@ -1,21 +1,15 @@
 development:
-  adapter: mysql2
+  adapter: postgresql
   encoding: utf8
   database: remisse
-  host: 127.0.0.1
-  port: 3306
   pool: 5
-  username: root
+  username: anibalcucco
   password:
-  socket: /var/mysql/mysql.sock
 
 test:
-  adapter: mysql2
+  adapter: postgresql
   encoding: utf8
-  host: 127.0.0.1
-  port: 3306
   database: remisse_test
   pool: 5
-  username: root
+  username: anibalcucco
   password:
-  socket: /var/mysql/mysql.sock
