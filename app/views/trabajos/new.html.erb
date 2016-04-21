@@ -14,11 +14,12 @@
     <tbody>
     <br>
     <p>Seleccione los remisses que trabajaron y los que pagaron</p>
+    <p><input type="checkbox" id="todos-trabajaron"/> Todos los remisses trabajaron</p>
     <% @autos.each do |auto| %>
       <tr>
       <td><%= auto.nombre %></td>
       <td><%= auto.oblea %></td>
-      <td><%= check_box_tag 'trabajos[]', auto.id %></td>
+      <td><%= check_box_tag 'trabajos[]', auto.id, false, class: 'auto-trabajo' %></td>
       <td><%= check_box_tag 'pagos[]', auto.id %></td>
       </tr>
     <% end %>

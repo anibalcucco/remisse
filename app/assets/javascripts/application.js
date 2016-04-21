@@ -22,4 +22,8 @@ $(function() {
     monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
     dateFormat: "dd/mm/yy"
   });
+
+  $('#todos-trabajaron').click(function(event) {
+    $('.auto-trabajo').attr('checked', this.checked);
+  });
 });
