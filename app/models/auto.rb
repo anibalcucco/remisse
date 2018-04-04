@@ -2,19 +2,13 @@ class Auto < ActiveRecord::Base
   attr_accessible :nombre, :oblea
 
   has_many :trabajos, :dependent => :destroy
-  
-  def pagados
-    Trabajo.find(:all, :conditions => ["auto_id = ? AND pagado = true", self.id])
-  end
+  has_many :pagados, class_name: 'Trabajo', conditions: { pagado: true }
+  has_many :no_pagados, class_name: 'Trabajo', conditions: { pagado: false }
 
-  def no_pagados
-    Trabajo.find(:all, :conditions => ["auto_id = ? AND pagado = false", self.id])
-  end
-  
   def debe
     return "No debe nada" if no_pagados.empty?
     "Debe: #{no_pagados.join(", ")}"
-  end 
+  end
 
   def nombre_completo
     "#{oblea} - #{nombre}"
@@ -30,7 +24,7 @@ class Auto < ActiveRecord::Base
   def to_csv
     nombre_completo << " - " << debe
   end
-  
+
   def to_s
     nombre_completo
   end
