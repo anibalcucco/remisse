@@ -2,6 +2,8 @@ class Trabajo < ActiveRecord::Base
 
   belongs_to :auto
 
+  scope :pagados, -> { where(pagado: true) }
+
   validates_uniqueness_of :fecha, :scope => :auto_id
   validates_presence_of :fecha
 
