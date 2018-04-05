@@ -10,7 +10,7 @@ class Trabajo < ActiveRecord::Base
   def fecha_formateada
     fecha.strftime('%d/%m/%y')
   end
-  
+
   def to_s
     fecha_formateada
   end
