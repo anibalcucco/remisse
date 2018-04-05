@@ -2,6 +2,13 @@ class TrabajosController < ApplicationController
 
   before_filter :authenticate_user!
   before_filter :find_auto, :only => [ :bulk, :update ]
+  before_filter :check_has_early_access_to_features, :only => [ :index ]
+
+  TIMEZONE = 'Atlantic Time (Canada)'.freeze
+
+  def index
+    @trabajos_pagados_por_dia = Trabajo.pagados.group_by_day(:updated_at, options_for_group_by_day).count
+  end
 
   def new
     @autos = Auto.find(:all, :order => 'oblea ASC')
@@ -10,7 +17,7 @@ class TrabajosController < ApplicationController
   def edit
     @trabajo = Trabajo.find(params[:id])
   end
-  
+
   def bulk
     @trabajos = @auto.no_pagados
   end
@@ -21,17 +28,17 @@ class TrabajosController < ApplicationController
         trabajo = Trabajo.find(:first, :conditions => ['fecha = ? AND auto_id = ?', params[:fecha].to_date, auto_id])
         if trabajo
           trabajo.update_attribute(:pagado, pagado?(auto_id))
-        elsif !pagado?(auto_id)
-          Trabajo.create(:fecha => params[:fecha], :auto_id => auto_id, :pagado => false)
-        end  
-      end if params[:trabajos]  
+        else
+          Trabajo.create(:fecha => params[:fecha], :auto_id => auto_id, :pagado => pagado?(auto_id))
+        end
+      end if params[:trabajos]
       flash[:notice] = 'La carga fue exitosa'
       redirect_to :controller => 'autos'
     else
-      flash[:notice] = 'Por favor seleccione una fecha antes de cargar'    
+      flash[:notice] = 'Por favor seleccione una fecha antes de cargar'
       @autos = Auto.find(:all)
       render :action => 'new'
-    end  
+    end
   end
 
   def update
@@ -59,9 +66,22 @@ class TrabajosController < ApplicationController
     return false unless params[:pagos]
     params[:pagos].include?(auto_id)
   end
-  
+
   def find_auto
     @auto = Auto.find(params[:auto_id])
+  end
+
+  def options_for_group_by_day
+    {
+      range: 2.weeks.ago.in_time_zone(TIMEZONE).beginning_of_day..Time.now,
+      time_zone: TIMEZONE,
+      format: '%d/%m/%Y',
+      reverse: true
+    }
+  end
+
+  def check_has_early_access_to_features
+    redirect_to action: :new unless current_user.has_early_access_to_features?
   end
 
 end

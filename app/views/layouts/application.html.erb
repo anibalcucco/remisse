@@ -14,6 +14,7 @@
           <li>
               <%= link_to 'Remisses', :controller => autos_path %>
               <%= link_to 'Cargar Planilla', new_trabajo_path %>
+              <%= link_to 'Pagos recibidos', trabajos_path if current_user.has_early_access_to_features? %>
               <%= link_to "Datos de la cuenta", edit_user_registration_path(current_user) %>
               <%= link_to "Salir", destroy_user_session_path, :method => :delete %>
           </li>

@@ -1,0 +1,20 @@
+<h1>Cantidad de pagos recibidos cada dia durante las ultimas dos semanas</h1>
+
+<table border="1" width="60%">
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Dias pagados</th>
+    </tr>
+  </thead>
+  <tbody>
+  <br>
+  <% @trabajos_pagados_por_dia.each do |fecha, cantidad| %>
+    <tr>
+    <td><%= fecha %></td>
+    <td><%= cantidad %></td>
+    </tr>
+  <% end %>
+
+  </tbody>
+</table>
