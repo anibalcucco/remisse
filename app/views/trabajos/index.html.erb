@@ -3,8 +3,8 @@
 <table border="1" width="60%">
   <thead>
     <tr>
-      <th>Fecha</th>
-      <th>Dias pagados</th>
+      <th>Días</th>
+      <th>Pagos</th>
     </tr>
   </thead>
   <tbody>
@@ -12,7 +12,7 @@
   <% @trabajos_pagados_por_dia.each do |fecha, cantidad| %>
     <tr>
     <td><%= fecha %></td>
-    <td><%= cantidad %></td>
+    <td><%= pagos_registrados(cantidad) %></td>
     </tr>
   <% end %>
 

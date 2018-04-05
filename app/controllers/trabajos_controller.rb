@@ -4,8 +4,6 @@ class TrabajosController < ApplicationController
   before_filter :find_auto, :only => [ :bulk, :update ]
   before_filter :check_has_early_access_to_features, :only => [ :index ]
 
-  TIMEZONE = 'Atlantic Time (Canada)'.freeze
-
   def index
     @trabajos_pagados_por_dia = Trabajo.pagados.group_by_day(:updated_at, options_for_group_by_day).count
   end
@@ -73,9 +71,8 @@ class TrabajosController < ApplicationController
 
   def options_for_group_by_day
     {
-      range: 2.weeks.ago.in_time_zone(TIMEZONE).beginning_of_day..Time.now,
-      time_zone: TIMEZONE,
-      format: '%d/%m/%Y',
+      range: 2.weeks.ago.beginning_of_day..Time.now,
+      format: '%A %d de %B',
       reverse: true
     }
   end
