@@ -13,3 +13,7 @@
  *= require chrome/chrometheme/chromestyle
  *= require_tree .
  */
+
+ .active-scaffold tr.record.moroso {
+   background-color: lightpink;
+ }
