@@ -2,7 +2,6 @@ class TrabajosController < ApplicationController
 
   before_filter :authenticate_user!
   before_filter :find_auto, :only => [ :bulk, :update ]
-  before_filter :check_has_early_access_to_features, :only => [ :index ]
 
   def index
     @trabajos_pagados_por_dia = Trabajo.pagados.group_by_day(:updated_at, options_for_group_by_day).count
@@ -75,10 +74,6 @@ class TrabajosController < ApplicationController
       format: '%A %d de %B',
       reverse: true
     }
-  end
-
-  def check_has_early_access_to_features
-    redirect_to action: :new unless current_user.has_early_access_to_features?
   end
 
 end
