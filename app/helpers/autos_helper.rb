@@ -17,7 +17,6 @@ module AutosHelper
   end
 
   def auto_list_row_class(auto)
-    return '' unless current_user.has_early_access_to_features?
     auto.no_pagados.count >= 7 ? 'moroso' : ''
   end
 
