@@ -17,7 +17,7 @@ module AutosHelper
   end
 
   def auto_list_row_class(auto)
-    auto.no_pagados.count >= 7 ? 'moroso' : ''
+    auto.no_pagados.count >= 8 ? 'moroso' : ''
   end
 
 end
