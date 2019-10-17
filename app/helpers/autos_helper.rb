@@ -1,5 +1,4 @@
 module AutosHelper
-
   def todo_pagado_link(auto)
     link_to "Marcar todo como pagado",
             pagado_auto_path(auto),
@@ -7,17 +6,16 @@ module AutosHelper
             :method => :post
   end
 
-  def debe_column(auto)
-    return "No debe" if auto.no_pagados.empty?
-    content = link_to "Debe #{auto.no_pagados.size} dias", bulk_trabajos_path(:auto_id => auto)
+  def debe_column(auto, column)
+    return "No debe" if auto.trabajos_no_pagados.empty?
+    content = link_to "Debe #{auto.trabajos_no_pagados.size} dias", bulk_trabajos_path(:auto_id => auto)
     links = []
-    auto.no_pagados.each { |trabajo| links << trabajo.fecha_formateada }
+    auto.trabajos_no_pagados.each { |trabajo| links << trabajo.fecha_formateada }
     content << ': ' << "#{links.join(", ")}"
     content << '. ' << todo_pagado_link(auto)
   end
 
   def auto_list_row_class(auto)
-    auto.no_pagados.count >= 8 ? 'moroso' : ''
+    auto.trabajos_no_pagados.count >= 8 ? 'moroso' : ''
   end
-
 end

@@ -1,11 +1,10 @@
 source 'https://rubygems.org'
+ruby '2.4.6'
 
-gem 'rails', '3.2.8'
-gem 'sass-rails', '~> 3.2.3'
+gem 'rails', '5.2'
+gem 'sass-rails'
 
 group :assets do
-  gem 'coffee-rails', '~> 3.2.1'
-  gem 'uglifier', '>= 1.0.3'
   gem 'jquery-ui-rails'
 end
 
@@ -14,4 +13,4 @@ gem 'active_scaffold'
 gem 'devise'
 gem 'pg'
 gem 'groupdate'
-gem 'rails-i18n', '~> 3.0'
+gem 'rails-i18n'

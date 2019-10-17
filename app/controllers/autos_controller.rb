@@ -1,11 +1,11 @@
 class AutosController < ApplicationController
-
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   active_scaffold :auto do |config|
     config.actions = [:create, :update, :list, :delete, :show, :search]
     config.label = "Remisses YA!"
-    config.columns = [:nombre, :oblea]
+    config.columns = [:nombre, :oblea, :debe]
+    config.columns[:debe].includes = [:trabajos]
     list.sorting = {:oblea => 'ASC'}
     list.columns = [:nombre, :oblea, :debe]
     list.per_page = 50
@@ -18,7 +18,6 @@ class AutosController < ApplicationController
   end
 
   def export_csv
-    autos = Auto.find(:all, :order => "oblea ASC")
     return if autos.size == 0
 
     data = ""
@@ -32,13 +31,21 @@ class AutosController < ApplicationController
   end
 
   def pagado
-    auto = Auto.find(params[:id])
-    cantidad = auto.no_pagados.size
-    auto.no_pagados.each do |trabajo|
+    number = auto.trabajos_no_pagados.size
+    auto.trabajos_no_pagados.each do |trabajo|
       trabajo.update_attribute(:pagado, true)
     end
-    flash[:notice] = "#{cantidad} dia(s) fueron marcados como pagados. El remisse '#{auto.nombre_completo}' no debe mas nada"
+    flash[:notice] = "#{number} dia(s) fueron marcados como pagados. El remisse '#{auto.nombre_completo}' no debe mas nada"
     redirect_to :controller => 'autos'
   end
 
+  private
+
+  def autos
+    @autos ||= Auto.all
+  end
+
+  def auto
+    @auto ||= Auto.find(params[:id])
+  end
 end

@@ -1,5 +1,4 @@
 module TrabajosHelper
-
   def pagos_registrados(cantidad)
     case cantidad
     when 0
@@ -10,6 +9,4 @@ module TrabajosHelper
       "Se registraron #{cantidad} pagos"
     end
   end
-
-
 end

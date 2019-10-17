@@ -1,4 +1,4 @@
-class CreateTrabajos < ActiveRecord::Migration
+class CreateTrabajos < ActiveRecord::Migration[5.2]
   def change
     create_table(:trabajos) do |t|
       t.date :fecha
