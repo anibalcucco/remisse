@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.4.6'
 
-gem 'rails', '5.2'
+gem 'rails', '5.2.2.1'
 gem 'sass-rails'
 
 group :assets do
