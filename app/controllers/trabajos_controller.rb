@@ -1,14 +1,12 @@
 class TrabajosController < ApplicationController
-
-  before_filter :authenticate_user!
-  before_filter :find_auto, :only => [ :bulk, :update ]
+  before_action :authenticate_user!
+  before_action :autos, :only => [:new]
 
   def index
     @trabajos_pagados_por_dia = Trabajo.pagados.group_by_day(:updated_at, options_for_group_by_day).count
   end
 
   def new
-    @autos = Auto.find(:all, :order => 'oblea ASC')
   end
 
   def edit
@@ -16,40 +14,30 @@ class TrabajosController < ApplicationController
   end
 
   def bulk
-    @trabajos = @auto.no_pagados
+    @trabajos = auto.trabajos.no_pagados
   end
 
   def create
-    unless params[:fecha].blank?
-      params[:trabajos].each do |auto_id|
-        trabajo = Trabajo.find(:first, :conditions => ['fecha = ? AND auto_id = ?', params[:fecha].to_date, auto_id])
-        if trabajo
-          trabajo.update_attribute(:pagado, pagado?(auto_id))
-        else
-          Trabajo.create(:fecha => params[:fecha], :auto_id => auto_id, :pagado => pagado?(auto_id))
-        end
-      end if params[:trabajos]
+    unless fecha.blank?
+      trabajos.each { |auto_id| create_or_update_trabajo(fecha, auto_id) }
       flash[:notice] = 'La carga fue exitosa'
       redirect_to :controller => 'autos'
     else
       flash[:notice] = 'Por favor seleccione una fecha antes de cargar'
-      @autos = Auto.find(:all)
+      autos
       render :action => 'new'
     end
   end
 
   def update
-    if params[:pagos]
-      params[:pagos].each do |trabajo_id|
-        trabajo = Trabajo.find(trabajo_id)
-        trabajo.update_attribute(:pagado, true)
-      end
-      no_pagados = @auto.no_pagados
-      flash[:notice] = "#{params[:pagos].size} dia(s) fueron marcados como pagados. "
+    if pagos.present?
+      pagos.each { |trabajo_id| mark_as_pagado(trabajo_id) }
+      no_pagados = auto.trabajos.no_pagados
+      flash[:notice] = "#{pagos.size} dia(s) fueron marcados como pagados. "
       if no_pagados.empty?
-        flash[:notice] << "El remisse '#{@auto.nombre_completo}' no debe mas nada"
+        flash[:notice] << "El remisse '#{auto.nombre_completo}' no debe mas nada"
       else
-        flash[:notice] << "El remisse '#{@auto.nombre_completo}' sigue debiendo #{no_pagados.size} dia(s)"
+        flash[:notice] << "El remisse '#{auto.nombre_completo}' sigue debiendo #{no_pagados.size} dia(s)"
       end
     else
       flash[:notice] = "No se seleccionaron dias pagados"
@@ -60,12 +48,11 @@ class TrabajosController < ApplicationController
   private
 
   def pagado?(auto_id)
-    return false unless params[:pagos]
-    params[:pagos].include?(auto_id)
+    pagos.include?(auto_id)
   end
 
-  def find_auto
-    @auto = Auto.find(params[:auto_id])
+  def auto
+    @auto ||= Auto.find(params[:auto_id])
   end
 
   def options_for_group_by_day
@@ -76,4 +63,32 @@ class TrabajosController < ApplicationController
     }
   end
 
+  def pagos
+    params[:pagos] || []
+  end
+
+  def trabajos
+    params[:trabajos] || []
+  end
+
+  def fecha
+    params[:fecha]
+  end
+
+  def autos
+    @autos ||= Auto.all
+  end
+
+  def create_or_update_trabajo(fecha, auto_id)
+    trabajo = Trabajo.where(['fecha = ? AND auto_id = ?', fecha.to_date, auto_id]).first
+    if trabajo
+      trabajo.update_attribute(:pagado, pagado?(auto_id))
+    else
+      Trabajo.create(:fecha => fecha, :auto_id => auto_id, :pagado => pagado?(auto_id))
+    end
+  end
+
+  def mark_as_pagado(trabajo_id)
+    auto.trabajos.find(trabajo_id).update_attribute(:pagado, true)
+  end
 end

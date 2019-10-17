@@ -3,13 +3,13 @@ development:
   encoding: utf8
   database: remisse
   pool: 5
-  username: anibalcucco
-  password:
+  username: anibal
+  password: anibal
 
 test:
   adapter: postgresql
   encoding: utf8
   database: remisse_test
   pool: 5
-  username: anibalcucco
-  password:
+  username: anibal
+  password: anibal

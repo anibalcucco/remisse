@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -9,42 +8,38 @@
 # from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
-# It's strongly recommended to check this file into your version control system.
+# It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121022190245) do
+ActiveRecord::Schema.define(version: 2012_10_22_184401) do
 
-  create_table "autos", :force => true do |t|
-    t.string   "nombre"
-    t.string   "oblea"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "autos", force: :cascade do |t|
+    t.string "nombre"
+    t.string "oblea"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "schema_info", :id => false, :force => true do |t|
-    t.integer "version"
+  create_table "trabajos", force: :cascade do |t|
+    t.date "fecha"
+    t.bigint "auto_id"
+    t.boolean "pagado"
+    t.string "monto"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["auto_id"], name: "index_trabajos_on_auto_id"
   end
 
-  create_table "trabajos", :force => true do |t|
-    t.date     "fecha"
-    t.integer  "auto_id"
-    t.boolean  "pagado"
-    t.string   "monto"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "login"
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
-
-  create_table "users", :force => true do |t|
-    t.string   "login",                     :limit => 40
-    t.string   "name",                      :limit => 100, :default => ""
-    t.string   "email",                     :limit => 100
-    t.string   "crypted_password",          :limit => 40
-    t.string   "salt",                      :limit => 40
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "remember_token",            :limit => 40
-    t.datetime "remember_token_expires_at"
-  end
-
-  add_index "users", ["login"], :name => "index_users_on_login", :unique => true
 
 end
