@@ -1,7 +1,8 @@
 class Auto < ApplicationRecord
   has_many :trabajos, :dependent => :destroy
 
-  default_scope { order(oblea: :asc) }
+  # Load trabajos by default to improve performance in active_scaffold list
+  default_scope { includes(:trabajos).order(oblea: :asc) }
 
   def debe
     return "No debe nada" if trabajos_no_pagados.empty?
