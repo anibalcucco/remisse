@@ -4,8 +4,7 @@ class AutosController < ApplicationController
   active_scaffold :auto do |config|
     config.actions = [:create, :update, :list, :delete, :show, :search]
     config.label = "Remisses YA!"
-    config.columns = [:nombre, :oblea, :debe]
-    config.columns[:debe].includes = [:trabajos]
+    config.columns = [:nombre, :oblea]
     list.sorting = {:oblea => 'ASC'}
     list.columns = [:nombre, :oblea, :debe]
     list.per_page = 50
