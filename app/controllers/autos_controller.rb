@@ -22,20 +22,16 @@ class AutosController < ApplicationController
     data = ""
     fecha = Date.today.strftime('%d/%m/%Y')
     data << "Fecha: #{fecha}" << "\r\n\r\n"
-    autos.each do |auto|
-      data << auto.to_csv << "\r\n"
-    end
+    autos.each { |auto| data << auto.to_csv << "\r\n" }
 
     send_data data, :type => 'text/csv', :filename => "Remisses.xls"
   end
 
   def pagado
-    number = auto.trabajos_no_pagados.size
-    auto.trabajos_no_pagados.each do |trabajo|
-      trabajo.update_attribute(:pagado, true)
-    end
-    flash[:notice] = "#{number} dia(s) fueron marcados como pagados. El remisse '#{auto.nombre_completo}' no debe mas nada"
-    redirect_to :controller => 'autos'
+    no_pagados = auto.trabajos_no_pagados.size
+    marcar_todo_pagado
+    flash[:notice] = "#{no_pagados} dia(s) fueron marcados como pagados. El remisse '#{auto.nombre_completo}' no debe mas nada"
+    redirect_to controller: :autos
   end
 
   private
@@ -46,5 +42,9 @@ class AutosController < ApplicationController
 
   def auto
     @auto ||= Auto.find(params[:id])
+  end
+
+  def marcar_todo_pagado
+    auto.trabajos_no_pagados.each { |trabajo| trabajo.update_attribute(:pagado, true) }
   end
 end

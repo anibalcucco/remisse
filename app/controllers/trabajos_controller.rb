@@ -14,42 +14,32 @@ class TrabajosController < ApplicationController
   end
 
   def bulk
-    @trabajos = auto.trabajos.no_pagados
+    @trabajos = auto.trabajos_no_pagados
   end
 
   def create
-    unless fecha.blank?
-      trabajos.each { |auto_id| create_or_update_trabajo(fecha, auto_id) }
-      flash[:notice] = 'La carga fue exitosa'
-      redirect_to :controller => 'autos'
-    else
+    if fecha.blank?
       flash[:notice] = 'Por favor seleccione una fecha antes de cargar'
       autos
       render :action => 'new'
+    else
+      autos_que_trabajaron.each { |auto| register_trabajo(auto, fecha, autos_que_pagaron.include?(auto)) }
+      flash[:notice] = 'La carga fue exitosa'
+      redirect_to controller: :autos
     end
   end
 
   def update
-    if pagos.present?
-      pagos.each { |trabajo_id| mark_as_pagado(trabajo_id) }
-      no_pagados = auto.trabajos.no_pagados
-      flash[:notice] = "#{pagos.size} dia(s) fueron marcados como pagados. "
-      if no_pagados.empty?
-        flash[:notice] << "El remisse '#{auto.nombre_completo}' no debe mas nada"
-      else
-        flash[:notice] << "El remisse '#{auto.nombre_completo}' sigue debiendo #{no_pagados.size} dia(s)"
-      end
+    if trabajos_pagados.present?
+      update_trabajos
+      show_current_state
     else
       flash[:notice] = "No se seleccionaron dias pagados"
     end
-    redirect_to :controller => 'autos'
+    redirect_to controller: :autos
   end
 
   private
-
-  def pagado?(auto_id)
-    pagos.include?(auto_id)
-  end
 
   def auto
     @auto ||= Auto.find(params[:auto_id])
@@ -63,32 +53,46 @@ class TrabajosController < ApplicationController
     }
   end
 
-  def pagos
-    params[:pagos] || []
+  def autos_que_trabajaron
+    @autos_que_trabajaron ||= Auto.where(id: params[:trabajos] || [])
   end
 
-  def trabajos
-    params[:trabajos] || []
+  def autos_que_pagaron
+    @autos_que_pagaron ||= Auto.where(id: params[:pagos] || [])
+  end
+
+  def trabajos_pagados
+    @trabajos_pagados ||= Trabajo.where(id: params[:pagos] || [])
   end
 
   def fecha
-    params[:fecha]
+    @fecha ||= params[:fecha]&.to_date
   end
 
   def autos
     @autos ||= Auto.all
   end
 
-  def create_or_update_trabajo(fecha, auto_id)
-    trabajo = Trabajo.where(['fecha = ? AND auto_id = ?', fecha.to_date, auto_id]).first
+  def register_trabajo(auto, fecha, pagado)
+    trabajo = auto.trabajos.detect { |trabajo| trabajo.fecha == fecha }
     if trabajo
-      trabajo.update_attribute(:pagado, pagado?(auto_id))
+      trabajo.update_attribute(:pagado, pagado)
     else
-      Trabajo.create(:fecha => fecha, :auto_id => auto_id, :pagado => pagado?(auto_id))
+      auto.trabajos.create(:fecha => fecha, :pagado => pagado)
     end
   end
 
-  def mark_as_pagado(trabajo_id)
-    auto.trabajos.find(trabajo_id).update_attribute(:pagado, true)
+  def update_trabajos
+    trabajos_pagados.each { |trabajo| trabajo.update_attribute(:pagado, true) }
+  end
+
+  def show_current_state
+    no_pagados = auto.trabajos.no_pagados
+    flash[:notice] = "#{trabajos_pagados.size} dia(s) fueron marcados como pagados. "
+    if no_pagados.empty?
+      flash[:notice] << "El remisse '#{auto.nombre_completo}' no debe mas nada"
+    else
+      flash[:notice] << "El remisse '#{auto.nombre_completo}' sigue debiendo #{no_pagados.size} dia(s)"
+    end
   end
 end
