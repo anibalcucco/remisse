@@ -13,3 +13,9 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+
+# Ignore locally installed bundle gems.
+/vendor/bundle
+
+# Ignore generated assets.
+/public/assets
