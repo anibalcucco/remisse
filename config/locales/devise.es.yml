@@ -1,0 +1,11 @@
+es:
+  devise:
+    sessions:
+      signed_in: 'Ingreso exitoso.'
+      signed_out: 'Sesión cerrada.'
+      user:
+        signed_in: 'Ingreso exitoso.'
+        signed_out: 'Sesión cerrada.'
+    failure:
+      unauthenticated: 'Necesitás iniciar sesión para continuar.'
+      invalid: 'Usuario o contraseña inválidos.'

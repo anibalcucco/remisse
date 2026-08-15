@@ -3,7 +3,7 @@ class TrabajosController < ApplicationController
   before_action :autos, :only => [:new]
 
   def index
-    @trabajos_pagados_por_dia = Trabajo.pagados.group_by_day(:updated_at, options_for_group_by_day).count
+    @trabajos_pagados_por_dia = Trabajo.pagados.group_by_day(:updated_at, **options_for_group_by_day).count
   end
 
   def new
