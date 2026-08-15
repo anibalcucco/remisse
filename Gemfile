@@ -1,15 +1,13 @@
 source 'https://rubygems.org'
-ruby '2.4.6'
 
-gem 'rails', '5.2.2.1'
-gem 'sass-rails'
+ruby '3.3.8'
 
-group :assets do
-  gem 'jquery-ui-rails'
-end
-
+gem 'rails', '8.1.3.1'
+gem 'sprockets-rails'
+gem 'sassc-rails'
 gem 'jquery-rails'
-gem 'active_scaffold'
+gem 'jquery-ui-rails'
+gem 'active_scaffold', '~> 4.3'
 gem 'devise'
 gem 'pg'
 gem 'groupdate'
